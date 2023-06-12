@@ -13,8 +13,6 @@ import {ComptrollerI} from "./interfaces/compound/ComptrollerI.sol";
 
 interface IWETH {
     function deposit() external payable;
-
-    function withdraw(uint256) external;
 }
 
 contract CompoundLender is BaseTokenizedStrategy {
@@ -27,17 +25,22 @@ contract CompoundLender is BaseTokenizedStrategy {
         None
     }
 
+    // For harvest and report to use to decide what rewards to claim and sell.
     ActiveRewards public rewardStatus;
+    // Minimum amount of rewards the strategy will try and sell.
+    uint256 public minToSell;
 
+    // WAVAX
     address internal constant WNATIVE =
         0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7;
 
+    // Address of the cToken based on the `asset`.
     CErc20I public immutable cToken;
-
+    // The comptroller to claim the pending rewards from.
     ComptrollerI public immutable COMPTROLLER;
-    
+    // Token that we expect to get as a reward on deposits.
     address public immutable rewardToken;
-
+    // Uni V2 router to sell rewards through.
     IUniswapV2Router02 public router;
 
     constructor(
@@ -51,11 +54,15 @@ contract CompoundLender is BaseTokenizedStrategy {
         cToken = CErc20I(_cToken);
         require(cToken.underlying() == _asset, "WRONG CTOKEN");
 
+        // Approve the asset to the cToken.
         ERC20(asset).safeApprove(_cToken, type(uint256).max);
 
+        // Set the immutable and storage variables.
         COMPTROLLER = ComptrollerI(_comptroller);
         rewardToken = _rewardToken;
         router = IUniswapV2Router02(_router);
+
+        minToSell = 1e10;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -149,6 +156,12 @@ contract CompoundLender is BaseTokenizedStrategy {
         _balance = cToken.balanceOfUnderlying(address(this));
     }
 
+    function underlyingBalanceStored() public view returns (uint256 _balance) {
+        (, uint256 currentCr, , uint256 exchangeRate) = cToken
+            .getAccountSnapshot(address(this));
+        _balance = (currentCr * exchangeRate) / 1e18;
+    }
+
     function _claimAndSellRewards() internal {
         ActiveRewards _rewardStatus = rewardStatus;
         if (_rewardStatus == ActiveRewards.Protocol) {
@@ -161,12 +174,12 @@ contract CompoundLender is BaseTokenizedStrategy {
         } else return;
 
         uint256 rewardBalance = ERC20(rewardToken).balanceOf(address(this));
-        if (rewardBalance > 1e10 && rewardToken != asset) {
+        if (rewardBalance > minToSell && rewardToken != asset) {
             _swapFrom(rewardToken, asset, rewardBalance, 0);
         }
 
         uint256 avaxBal = address(this).balance;
-        if (avaxBal > 1e10) {
+        if (avaxBal > minToSell) {
             IWETH(WNATIVE).deposit{value: avaxBal}();
             _swapFrom(WNATIVE, asset, avaxBal, 0);
         }
@@ -219,6 +232,10 @@ contract CompoundLender is BaseTokenizedStrategy {
         ActiveRewards _newRewardStatus
     ) external onlyManagement {
         rewardStatus = _newRewardStatus;
+    }
+
+    function setMinToSell(uint256 _minToSell) external onlyManagement {
+        minToSell = _minToSell;
     }
 
     /*//////////////////////////////////////////////////////////////
