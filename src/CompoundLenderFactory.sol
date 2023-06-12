@@ -19,7 +19,8 @@ contract CompoundLenderFactory {
         string memory _name,
         address _cToken,
         address _comptroller,
-        address _rewardToken
+        address _rewardToken,
+        address _router
     ) {
         newCompoundLender(
             _asset,
@@ -27,6 +28,7 @@ contract CompoundLenderFactory {
             _cToken,
             _comptroller,
             _rewardToken,
+            _router,
             msg.sender,
             msg.sender,
             msg.sender
@@ -38,7 +40,8 @@ contract CompoundLenderFactory {
         string memory _name,
         address _cToken,
         address _comptroller,
-        address _rewardToken
+        address _rewardToken,
+        address _router
     ) external returns (address) {
         return
             newCompoundLender(
@@ -47,6 +50,7 @@ contract CompoundLenderFactory {
                 _cToken,
                 _comptroller,
                 _rewardToken,
+                _router,
                 msg.sender,
                 msg.sender,
                 msg.sender
@@ -59,6 +63,7 @@ contract CompoundLenderFactory {
         address _cToken,
         address _comptroller,
         address _rewardToken,
+        address _router,
         address _performanceFeeRecipient,
         address _keeper,
         address _management
@@ -72,7 +77,8 @@ contract CompoundLenderFactory {
                     _name,
                     _cToken,
                     _comptroller,
-                    _rewardToken
+                    _rewardToken,
+                    _router
                 )
             )
         );

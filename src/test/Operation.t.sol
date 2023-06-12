@@ -5,6 +5,7 @@ import "forge-std/console.sol";
 import {Setup} from "./utils/Setup.sol";
 
 import {CErc20I, CTokenI} from "../interfaces/compound/CErc20I.sol";
+import {CompoundLender} from "../CompoundLender.sol";
 
 contract OperationTest is Setup {
     function setUp() public override {
