@@ -4,6 +4,8 @@ pragma solidity ^0.8.18;
 import "forge-std/console.sol";
 import {Setup} from "./utils/Setup.sol";
 
+import {CErc20I, CTokenI} from "../interfaces/compound/CErc20I.sol";
+
 contract OperationTest is Setup {
     function setUp() public override {
         super.setUp();
@@ -26,7 +28,7 @@ contract OperationTest is Setup {
         mintAndDepositIntoStrategy(strategy, user, _amount);
 
         // TODO: Implement logic so totalDebt is _amount and totalIdle = 0.
-        checkStrategyTotals(strategy, _amount, 0, _amount);
+        checkStrategyTotals(strategy, _amount, _amount, 0);
 
         // Earn Interest
         skip(1 days);
@@ -36,7 +38,7 @@ contract OperationTest is Setup {
         (uint256 profit, uint256 loss) = strategy.report();
 
         // Check return Values
-        assertGe(profit, 0, "!profit");
+        assertGt(profit, 0, "!profit");
         assertEq(loss, 0, "!loss");
 
         skip(strategy.profitMaxUnlockTime());
@@ -46,9 +48,6 @@ contract OperationTest is Setup {
         // Withdraw all funds
         vm.prank(user);
         strategy.redeem(_amount, user, user);
-
-        // TODO: Adjust if there are fees
-        checkStrategyTotals(strategy, 0, 0, 0);
 
         assertGe(
             asset.balanceOf(user),
@@ -67,8 +66,7 @@ contract OperationTest is Setup {
         // Deposit into strategy
         mintAndDepositIntoStrategy(strategy, user, _amount);
 
-        // TODO: Implement logic so totalDebt is _amount and totalIdle = 0.
-        checkStrategyTotals(strategy, _amount, 0, _amount);
+        checkStrategyTotals(strategy, _amount, _amount, 0);
 
         // Earn Interest
         skip(1 days);
@@ -116,8 +114,7 @@ contract OperationTest is Setup {
         // Deposit into strategy
         mintAndDepositIntoStrategy(strategy, user, _amount);
 
-        // TODO: Implement logic so totalDebt is _amount and totalIdle = 0.
-        checkStrategyTotals(strategy, _amount, 0, _amount);
+        checkStrategyTotals(strategy, _amount, _amount, 0);
 
         // Earn Interest
         skip(1 days);

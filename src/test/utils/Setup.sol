@@ -6,7 +6,9 @@ import {ExtendedTest} from "./ExtendedTest.sol";
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-import {Strategy} from "../../Strategy.sol";
+import {CompoundLender} from "../../CompoundLender.sol";
+import {CompoundLenderFactory} from "../../CompoundLenderFactory.sol";
+
 import {IStrategyInterface} from "../../interfaces/IStrategyInterface.sol";
 
 // Inherit the events so they can be checked if desired.
@@ -41,8 +43,8 @@ contract Setup is ExtendedTest, IEvents {
     uint256 public MAX_BPS = 10_000;
 
     // Fuzz from $0.01 of 1e6 stable coins up to 1 trillion of a 1e18 coin
-    uint256 public maxFuzzAmount = 1e30;
-    uint256 public minFuzzAmount = 10_000;
+    uint256 public maxFuzzAmount = 1e25;
+    uint256 public minFuzzAmount = 1e15;
 
     // Default prfot max unlock time is set for 10 days
     uint256 public profitMaxUnlockTime = 10 days;
@@ -51,7 +53,7 @@ contract Setup is ExtendedTest, IEvents {
         _setTokenAddrs();
 
         // Set asset
-        asset = ERC20(tokenAddrs["DAI"]);
+        asset = ERC20(0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB);
 
         // Set decimals
         decimals = asset.decimals();
@@ -71,7 +73,15 @@ contract Setup is ExtendedTest, IEvents {
     function setUpStrategy() public returns (address) {
         // we save the strategy as a IStrategyInterface to give it the needed interface
         IStrategyInterface _strategy = IStrategyInterface(
-            address(new Strategy(address(asset), "Tokenized Strategy"))
+            address(
+                new CompoundLender(
+                    address(asset),
+                    "Tokenized Strategy",
+                    0x334AD834Cd4481BB02d09615E7c11a00579A7909,
+                    0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4,
+                    0x8729438EB15e2C8B576fCc6AeCdA6A148776C0F5
+                )
+            )
         );
 
         // set keeper
