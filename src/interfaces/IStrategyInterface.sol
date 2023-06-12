@@ -9,7 +9,13 @@ interface IStrategyInterface is IStrategy {
     //TODO: Add your specific implementation interface in here.
     function underlyingBalance() external returns (uint256 _balance);
 
+    function underlyingBalanceStored() external view returns (uint256 _balance);
+
     function cToken() external view returns (CErc20I);
+
+    function rewardToken() external view returns (address);
+
+    function setMinToSell(uint256 _minToSell) external;
 
     function rewardStatus() external view returns (uint256);
 

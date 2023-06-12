@@ -29,11 +29,14 @@ contract CompoundLender is BaseTokenizedStrategy {
     address internal constant WNATIVE =
         0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7;
     // The comptroller to claim the pending rewards from.
-    ComptrollerI public constant COMPTROLLER = ComptrollerI(0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4);
+    ComptrollerI public constant COMPTROLLER =
+        ComptrollerI(0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4);
     // Token that we expect to get as a reward on deposits.
-    address public constant rewardToken = 0x8729438EB15e2C8B576fCc6AeCdA6A148776C0F5;
+    address public constant rewardToken =
+        0x8729438EB15e2C8B576fCc6AeCdA6A148776C0F5;
     // Uni V2 router to sell rewards through.
-    IUniswapV2Router02 public constant router = IUniswapV2Router02(0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106);
+    IUniswapV2Router02 public constant router =
+        IUniswapV2Router02(0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106);
 
     // Address of the cToken based on the `asset`.
     CErc20I public immutable cToken;

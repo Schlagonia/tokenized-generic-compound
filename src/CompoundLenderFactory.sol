@@ -14,11 +14,7 @@ interface IStrategy {
 contract CompoundLenderFactory {
     event NewCompoundLender(address indexed strategy, address indexed asset);
 
-    constructor(
-        address _asset,
-        string memory _name,
-        address _cToken
-    ) {
+    constructor(address _asset, string memory _name, address _cToken) {
         newCompoundLender(
             _asset,
             _name,
@@ -56,13 +52,7 @@ contract CompoundLenderFactory {
         // We need to use the custom interface with the
         // tokenized strategies available setters.
         IStrategy newStrategy = IStrategy(
-            address(
-                new CompoundLender(
-                    _asset,
-                    _name,
-                    _cToken
-                )
-            )
+            address(new CompoundLender(_asset, _name, _cToken))
         );
 
         newStrategy.setPerformanceFeeRecipient(_performanceFeeRecipient);
