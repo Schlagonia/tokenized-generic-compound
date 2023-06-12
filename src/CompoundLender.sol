@@ -25,43 +25,34 @@ contract CompoundLender is BaseTokenizedStrategy {
         None
     }
 
+    // WAVAX
+    address internal constant WNATIVE =
+        0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7;
+    // The comptroller to claim the pending rewards from.
+    ComptrollerI public constant COMPTROLLER = ComptrollerI(0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4);
+    // Token that we expect to get as a reward on deposits.
+    address public constant rewardToken = 0x8729438EB15e2C8B576fCc6AeCdA6A148776C0F5;
+    // Uni V2 router to sell rewards through.
+    IUniswapV2Router02 public constant router = IUniswapV2Router02(0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106);
+
+    // Address of the cToken based on the `asset`.
+    CErc20I public immutable cToken;
+
     // For harvest and report to use to decide what rewards to claim and sell.
     ActiveRewards public rewardStatus;
     // Minimum amount of rewards the strategy will try and sell.
     uint256 public minToSell;
 
-    // WAVAX
-    address internal constant WNATIVE =
-        0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7;
-
-    // Address of the cToken based on the `asset`.
-    CErc20I public immutable cToken;
-    // The comptroller to claim the pending rewards from.
-    ComptrollerI public immutable COMPTROLLER;
-    // Token that we expect to get as a reward on deposits.
-    address public immutable rewardToken;
-    // Uni V2 router to sell rewards through.
-    IUniswapV2Router02 public router;
-
     constructor(
         address _asset,
         string memory _name,
-        address _cToken,
-        address _comptroller,
-        address _rewardToken,
-        address _router
+        address _cToken
     ) BaseTokenizedStrategy(_asset, _name) {
         cToken = CErc20I(_cToken);
         require(cToken.underlying() == _asset, "WRONG CTOKEN");
 
         // Approve the asset to the cToken.
         ERC20(asset).safeApprove(_cToken, type(uint256).max);
-
-        // Set the immutable and storage variables.
-        COMPTROLLER = ComptrollerI(_comptroller);
-        rewardToken = _rewardToken;
-        router = IUniswapV2Router02(_router);
-
         minToSell = 1e10;
     }
 

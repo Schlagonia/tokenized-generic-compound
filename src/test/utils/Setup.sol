@@ -77,10 +77,7 @@ contract Setup is ExtendedTest, IEvents {
                 new CompoundLender(
                     address(asset),
                     "Tokenized Strategy",
-                    0x334AD834Cd4481BB02d09615E7c11a00579A7909,
-                    0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4,
-                    0x8729438EB15e2C8B576fCc6AeCdA6A148776C0F5,
-                    0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106 // Joe router 0x60aE616a2155Ee3d9A68541Ba4544862310933d4
+                    0x334AD834Cd4481BB02d09615E7c11a00579A7909
                 )
             )
         );
