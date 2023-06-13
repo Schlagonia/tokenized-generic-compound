@@ -3,7 +3,7 @@ pragma solidity 0.8.18;
 
 import {IStrategy} from "@tokenized-strategy/interfaces/IStrategy.sol";
 import {CErc20I} from "./compound/CErc20I.sol";
-import {CompoundLender} from "../CompoundLender.sol";
+import {BenqiLender} from "../BenqiLender.sol";
 
 interface IStrategyInterface is IStrategy {
     //TODO: Add your specific implementation interface in here.
@@ -20,6 +20,6 @@ interface IStrategyInterface is IStrategy {
     function rewardStatus() external view returns (uint256);
 
     function setRewardStatus(
-        CompoundLender.ActiveRewards _newRewardStatus
+        BenqiLender.ActiveRewards _newRewardStatus
     ) external;
 }

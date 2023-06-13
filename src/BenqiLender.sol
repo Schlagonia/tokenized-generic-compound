@@ -15,7 +15,7 @@ interface IWETH {
     function deposit() external payable;
 }
 
-contract CompoundLender is BaseTokenizedStrategy {
+contract BenqiLender is BaseTokenizedStrategy {
     using SafeERC20 for ERC20;
 
     enum ActiveRewards {

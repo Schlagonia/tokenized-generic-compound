@@ -6,8 +6,8 @@ import {ExtendedTest} from "./ExtendedTest.sol";
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-import {CompoundLender} from "../../CompoundLender.sol";
-import {CompoundLenderFactory} from "../../CompoundLenderFactory.sol";
+import {BenqiLender} from "../../BenqiLender.sol";
+import {BenqiLenderFactory} from "../../BenqiLenderFactory.sol";
 
 import {IStrategyInterface} from "../../interfaces/IStrategyInterface.sol";
 
@@ -74,7 +74,7 @@ contract Setup is ExtendedTest, IEvents {
         // we save the strategy as a IStrategyInterface to give it the needed interface
         IStrategyInterface _strategy = IStrategyInterface(
             address(
-                new CompoundLender(
+                new BenqiLender(
                     address(asset),
                     "Tokenized Strategy",
                     0x334AD834Cd4481BB02d09615E7c11a00579A7909

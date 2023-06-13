@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.18;
 
-import {CompoundLender} from "./CompoundLender.sol";
+import {BenqiLender} from "./BenqiLender.sol";
 
 interface IStrategy {
     function setPerformanceFeeRecipient(address) external;
@@ -11,11 +11,11 @@ interface IStrategy {
     function setManagement(address) external;
 }
 
-contract CompoundLenderFactory {
-    event NewCompoundLender(address indexed strategy, address indexed asset);
+contract BenqiLenderFactory {
+    event NewBenqiLender(address indexed strategy, address indexed asset);
 
     constructor(address _asset, string memory _name, address _cToken) {
-        newCompoundLender(
+        newBenqiLender(
             _asset,
             _name,
             _cToken,
@@ -25,13 +25,13 @@ contract CompoundLenderFactory {
         );
     }
 
-    function newCompoundLender(
+    function newBenqiLender(
         address _asset,
         string memory _name,
         address _cToken
     ) external returns (address) {
         return
-            newCompoundLender(
+            newBenqiLender(
                 _asset,
                 _name,
                 _cToken,
@@ -41,7 +41,7 @@ contract CompoundLenderFactory {
             );
     }
 
-    function newCompoundLender(
+    function newBenqiLender(
         address _asset,
         string memory _name,
         address _cToken,
@@ -52,7 +52,7 @@ contract CompoundLenderFactory {
         // We need to use the custom interface with the
         // tokenized strategies available setters.
         IStrategy newStrategy = IStrategy(
-            address(new CompoundLender(_asset, _name, _cToken))
+            address(new BenqiLender(_asset, _name, _cToken))
         );
 
         newStrategy.setPerformanceFeeRecipient(_performanceFeeRecipient);
@@ -61,7 +61,7 @@ contract CompoundLenderFactory {
 
         newStrategy.setManagement(_management);
 
-        emit NewCompoundLender(address(newStrategy), _asset);
+        emit NewBenqiLender(address(newStrategy), _asset);
         return address(newStrategy);
     }
 }
