@@ -188,12 +188,17 @@ contract OperationTest is Setup {
             )
         );
 
+        strategy.acceptManagement();
+
         // set keeper
         strategy.setKeeper(keeper);
         // set treasury
         strategy.setPerformanceFeeRecipient(performanceFeeRecipient);
         // set management of the strategy
-        strategy.setManagement(management);
+        strategy.setPendingManagement(management);
+        // Accept management.
+        vm.prank(management);
+        strategy.acceptManagement();
 
         // Set protofol fee to 0 and perf fee to 10%
         setFees(0, 1_000);

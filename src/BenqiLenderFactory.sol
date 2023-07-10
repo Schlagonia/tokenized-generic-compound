@@ -8,7 +8,7 @@ interface IStrategy {
 
     function setKeeper(address) external;
 
-    function setManagement(address) external;
+    function setPendingManagement(address) external;
 }
 
 contract BenqiLenderFactory {
@@ -59,7 +59,7 @@ contract BenqiLenderFactory {
 
         newStrategy.setKeeper(_keeper);
 
-        newStrategy.setManagement(_management);
+        newStrategy.setPendingManagement(_management);
 
         emit NewBenqiLender(address(newStrategy), _asset);
         return address(newStrategy);
